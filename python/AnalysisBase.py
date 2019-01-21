@@ -36,7 +36,6 @@ class AnalysisBase(object):
         if not hasattr(self,'preselection'): self.preselection = '1'
         # input files
         self.fileNames = []
-        print inputFileNames
         if os.path.isfile('PSet.py'):                # grab input files from crab pset
             import PSet
             self.fileNames = list(PSet.process.source.fileNames)
@@ -89,10 +88,11 @@ class AnalysisBase(object):
                 self.numLumis += 1
             runtree = tfile.Get('Runs')
             for entry in runtree:
-                self.numEvents += runtree.genEventCount
-                self.summedWeights += runtree.genEventSumw
-                for i in range(9):
-                    self.summedWeightsLHEScale[i] += runtree.LHEScaleSumw[i]
+                if hasattr(runtree,'genEventCount'):
+                    self.numEvents += runtree.genEventCount
+                    self.summedWeights += runtree.genEventSumw
+                    for i in range(9):
+                        self.summedWeightsLHEScale[i] += runtree.LHEScaleSumw[i]
             tfile.Close('R')
         logging.info('Analysis is running with version {0}'.format(self.version))
         logging.info("Will process {0} lumi sections with {1} events ({2}).".format(self.numLumis,self.numEvents,self.summedWeights))
@@ -115,7 +115,7 @@ class AnalysisBase(object):
         # gen
         self.tree.add(lambda cands: self.event.Pileup_nPU(), 'numTrueVertices', 'I')
         self.tree.add(lambda cands: self.event.isData(), 'isData', 'I')
-        self.tree.add(lambda cands: self.event.genWeight(), 'genWeight', 'F')
+        self.tree.add(lambda cands: 0 if self.event.isData() else self.event.genWeight(), 'genWeight', 'F')
         # scale shifts
         weightMap = {
             0: {'muR':1.0, 'muF':1.0},
@@ -338,7 +338,6 @@ class AnalysisBase(object):
         '''Add Met variables'''
         self.addCandVar(label,'pt','pt','F')
         self.addCandVar(label,'phi','phi','F')
-        self.addCandVar(label,'et','sumEt','F')
         self.addCandVar(label,'cov00','covXX','F')
         self.addCandVar(label,'cov01','covXY','F')
         self.addCandVar(label,'cov10','covXY','F')

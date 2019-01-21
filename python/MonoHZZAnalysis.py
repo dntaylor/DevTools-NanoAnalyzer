@@ -156,32 +156,36 @@ class MonoHZZAnalysis(AnalysisBase):
     def trigger(self,cands):
         # accept MC, check trigger for data
         if self.event.isData()<0.5: return True
+        # 2018 commented
         triggerNames = {
             'DoubleMuon'     : [
-                'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL',
-                'Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL',
-                'DiMu9_Ele9_CaloIdL_TrackIdL',
+                'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ',
+                #'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8',
+                #'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8',
+                'TripleMu_10_5_5_DZ',
                 'TripleMu_12_10_5',
             ],
             'DoubleEG'       : [
                 'Ele23_Ele12_CaloIdL_TrackIdL_IsoVL',
+                'DoubleEle33_CaloIdL_MW',
                 'Ele16_Ele12_Ele8_CaloIdL_TrackIdL',
-                'Mu8_DiEle12_CaloIdL_TrackIdL',
             ],
             'MuonEG'         : [
-                'Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL',
-                'Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL',
+                #'Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL',
+                'Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ',
+                'Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ',
+                'Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ',
+                'DiMu9_Ele9_CaloIdL_TrackIdL_DZ',
+                'Mu8_DiEle12_CaloIdL_TrackIdL',
+                'Mu8_DiEle12_CaloIdL_TrackIdL_DZ',
             ],
             'SingleMuon'     : [
-                'IsoMu24',
-                'IsoTkMu24',
-                'Mu45_eta2p1',
-                'Mu50',
+                'IsoMu27',
             ],
             'SingleElectron' : [
-                'Ele27_WPTight_Gsf',
-                'Ele27_eta2p1_WPLoose_Gsf',
-                'Ele45_WPLoose_Gsf',
+                'Ele35_WPTight_Gsf',
+                'Ele38_WPTight_Gsf',
+                'Ele40_WPTight_Gsf',
             ],
         }
         # the order here defines the heirarchy
@@ -203,7 +207,7 @@ class MonoHZZAnalysis(AnalysisBase):
             # if we match to the dataset, start accepting triggers
             if dataset in self.fileNames[0]: reject = False
             for trigger in triggerNames[dataset]:
-                var = '{0}Pass'.format(trigger)
+                var = 'HLT_{0}'.format(trigger)
                 passTrigger = getattr(self.event,var)()
                 if passTrigger>0.5:
                     # it passed the trigger
@@ -222,7 +226,8 @@ def parse_command_line(argv):
     parser = argparse.ArgumentParser(description='Run analyzer')
 
     #parser.add_argument('--inputFiles', type=str, nargs='*', default=getTestFiles('hzz'), help='Input files')
-    parser.add_argument('--inputFiles', type=str, nargs='*', default='hzz.root', help='Input files')
+    #parser.add_argument('--inputFiles', type=str, nargs='*', default=getTestFiles('data'), help='Input files')
+    parser.add_argument('--inputFiles', type=str, nargs='*', default='doublemuon.root', help='Input files')
     parser.add_argument('--inputFileList', type=str, default='', help='Input file list')
     parser.add_argument('--outputFile', type=str, default='monoHZZTree.root', help='Output file')
     parser.add_argument('--shift', type=str, default='', choices=['','ElectronEnUp','ElectronEnDown','MuonEnUp','MuonEnDown','TauEnUp','TauEnDown','JetEnUp','JetEnDown','JetResUp','JetResDown','UnclusteredEnUp','UnclusteredEnDown'], help='Energy shift')

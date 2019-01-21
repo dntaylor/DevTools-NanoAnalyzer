@@ -24,7 +24,7 @@ class Event(object):
         return hasattr(self.tree,var)
 
     def isData(self,):
-        return self.genWeight()==0 # hack
+        return not hasattr(self.tree,'genWeight') # hack
 
     def lumi(self,):
         return self.luminosityBlock()
@@ -154,16 +154,13 @@ class Met(Candidate):
         return '<{0} {1} {2:.2f}:{3:.2f}>'.format(
             self.collName,
             self.entry,
-            self.et(),
+            self.pt(),
             self.phi(),
         )
 
-    def et(self):
-        return self.sumEt()
-
     def p4(self):
         metP4 = ROOT.TLorentzVector()
-        metP4.SetPtEtaPhiM(self.et(),0.,self.phi(),0)
+        metP4.SetPtEtaPhiM(self.pt(),0.,self.phi(),0)
         return metP4
 
 ############################
@@ -275,11 +272,11 @@ class MetCompositeCandidate(CompositeCandidate):
         if abs(codphi)==math.pi or codphi==0:
             x = 0
         else:
-            x = c.pt()/(c.pt() + self.met.et()*(math.cos(dphi) - math.sin(dphi)/math.tan(codphi)))
+            x = c.pt()/(c.pt() + self.met.pt()*(math.cos(dphi) - math.sin(dphi)/math.tan(codphi)))
         # note: large met and small deltaphi between c/o results in large negative values for denom
         # this doesnt work for our boosted topology in a->tt since met resolution is poor
         #if x<0:
-        #    print x, c.pt(), self.met.et(), dphi, codphi
+        #    print x, c.pt(), self.met.pt(), dphi, codphi
         return x
 
     def mcat(self,i1=0,i2=1):
