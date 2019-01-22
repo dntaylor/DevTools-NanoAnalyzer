@@ -23,8 +23,8 @@ def deltaR(eta0,phi0,eta1,phi1):
 
 def getTestFiles(sample):
     sampleMap = {
-        'hzz': '/store/mc/RunIIFall17NanoAOD/VBF_HToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/90000/22014A1F-BD44-E811-A374-0025905B85B8.root',
-        'data': '/store/data/Run2017B/DoubleMuon/NANOAOD/31Mar2018-v1/70000/BC7C8A2C-BE44-E811-93C8-FA163E55A87B.root',
+        'hzz': '/store/mc/RunIIFall17NanoAODv4/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8/NANOAODSIM/PU2017_12Apr2018_Nano14Dec2018_102X_mc2017_realistic_v6_ext1-v1/40000/4AAF9451-2C48-8247-867A-3BB8980C4893.root',
+        'data': '/store/data/Run2017B/DoubleMuon/NANOAOD/Nano14Dec2018-v1/280000/FB901F01-98AA-214F-A2C2-D67630861952.root',
     }
 
     if sample in sampleMap:

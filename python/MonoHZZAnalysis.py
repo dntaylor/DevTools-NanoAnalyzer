@@ -30,6 +30,7 @@ class MonoHZZAnalysis(AnalysisBase):
         super(MonoHZZAnalysis, self).__init__(outputFileName=outputFileName,outputTreeName=outputTreeName,**kwargs)
 
         # setup cut tree
+        self.cutTree.add(self.metFilter,'metFilter')
         self.cutTree.add(self.fourLoose,'fourLooseLeptons')
         self.cutTree.add(self.trigger,'trigger')
         self.cutTree.add(self.vertex,'vertex')
@@ -69,10 +70,7 @@ class MonoHZZAnalysis(AnalysisBase):
             'dxy': lambda cand: abs(cand.dxy())<0.5,
             'dz' : lambda cand: abs(cand.dz())<1,
             # muon best track type not in nanoaod?
-            #'id' : lambda cand: (cand.isGlobal() or (cand.isTracker() and cand.nStations()>0)), # and cand.muonBestTrackType!=2,
-            # global muon not in current version of nanoaod (but is in cmssw master)
-            'id' : lambda cand: True, # isLooseMuon part of cut to include
-            # note, this needs to be done after FSR, so probably move
+            'id' : lambda cand: (cand.isGlobal() or (cand.isTracker() and cand.nStations()>0)), # and cand.muonBestTrackType!=2,
             'iso': lambda cand: cand.pfRelIso03_all()<0.35,
             'sip': lambda cand: abs(cand.sip3d())<4,
         }
@@ -89,21 +87,19 @@ class MonoHZZAnalysis(AnalysisBase):
     def passElectron(self,cand):
         pt = cand.pt()
         eta = abs(cand.eta() + cand.deltaEtaSC())
-        # not included in nanoaod yet (but is on master)
-        #mva = cand.mvaFall17V1Iso() # note, should be V2
+        mva = cand.mvaFall17V2Iso()
         cuts = {
             'pt' : lambda cand: cand.pt()>7,
             'eta': lambda cand: abs(cand.eta())<2.5,
             'dxy': lambda cand: abs(cand.dxy())<0.5,
             'dz' : lambda cand: abs(cand.dz())<1,
-            'id' : lambda cand: cand.mvaFall17Iso_WPL()>0.5, # tmp
-            #'id' : lambda cand: (pt<=10 and ((eta<0.8                and mva>0.5739521065342641)\
-            #                            or   (eta>=0.8 and eta<1.479 and mva>0.5504628790992929)\
-            #                            or   (eta>=1.479             and mva>0.5924627534389098)))\
-            #                    or\
-            #                    (pt>10  and ((eta<0.8                and mva>-0.03391387993354392)\
-            #                            or   (eta>=0.8 and eta<1.479 and mva>-0.018451958064666783)\
-            #                            or   (eta>=1.479             and mva>-0.38565459150737535))),
+            'id' : lambda cand: (pt<=10 and ((eta<0.8                and mva>0.5739521065342641)\
+                                        or   (eta>=0.8 and eta<1.479 and mva>0.5504628790992929)\
+                                        or   (eta>=1.479             and mva>0.5924627534389098)))\
+                                or\
+                                (pt>10  and ((eta<0.8                and mva>-0.03391387993354392)\
+                                        or   (eta>=0.8 and eta<1.479 and mva>-0.018451958064666783)\
+                                        or   (eta>=1.479             and mva>-0.38565459150737535))),
             'iso': lambda cand: cand.pfRelIso03_all()<0.35,
             'sip': lambda cand: abs(cand.sip3d())<4,
         }
@@ -297,7 +293,6 @@ class MonoHZZAnalysis(AnalysisBase):
         reject = True if self.event.isData()>0.5 else False
         for dataset in datasets:
             # if we match to the dataset, start accepting triggers
-            # TODO: figure out how to find what dataset we are using
             if dataset in self.fileNames[0]: reject = False
             for trigger in triggerNames[dataset]:
                 var = 'HLT_{0}'.format(trigger)

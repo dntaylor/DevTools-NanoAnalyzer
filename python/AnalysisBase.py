@@ -287,8 +287,12 @@ class AnalysisBase(object):
             if dataset in self.fileNames[0] and isData: break
         return False
 
-    def metFilter(self,cands):
+    def metFilter(self):
         if not self.event.isData(): return True
+
+        return self.event.Flag_METFilters()
+
+        # legacy, keep in case we revert
         filterList = [
             'HBHENoiseFilter',
             'HBHENoiseIsoFilter',
@@ -305,12 +309,12 @@ class AnalysisBase(object):
             #'badMuons',
         ]
         for f in filterList:
-            if getattr(self.event,f)()==0:
+            if getattr(self.event,'Flag_{}'.format(f))()==0:
                 logging.info('Rejecting event {0}:{1}:{2} for {3}={4}'.format(self.event.run(), self.event.lumi(), self.event.event(), f, getattr(self.event,f)()))
                 self.report_failure('fails {}'.format(f))
                 return False
         for f in notFilterList:
-            if getattr(self.event,f)()>0:
+            if getattr(self.event,'Flag_{}'.format(f))()>0:
                 logging.info('Rejecting event {0}:{1}:{2} for {3}={4}'.format(self.event.run(), self.event.lumi(), self.event.event(), f, getattr(self.event,f)()))
                 self.report_failure('fails {}'.format(f))
                 return False
@@ -343,10 +347,10 @@ class AnalysisBase(object):
         '''Add Met variables'''
         self.addCandVar(label,'pt','pt','F')
         self.addCandVar(label,'phi','phi','F')
-        self.addCandVar(label,'cov00','covXX','F')
-        self.addCandVar(label,'cov01','covXY','F')
-        self.addCandVar(label,'cov10','covXY','F')
-        self.addCandVar(label,'cov11','covYY','F')
+        #self.addCandVar(label,'cov00','covXX','F')
+        #self.addCandVar(label,'cov01','covXY','F')
+        #self.addCandVar(label,'cov10','covXY','F')
+        #self.addCandVar(label,'cov11','covYY','F')
 
     def addCandidate(self,label):
         '''Add variables relevant for all objects'''
