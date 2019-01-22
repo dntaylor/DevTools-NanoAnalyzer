@@ -68,6 +68,7 @@ class AnalysisBase(object):
         self.summedWeightsLHEScale = [0]*9
         logging.info('Getting Lumi information')
         #self.skims = {}
+        #self.tfiles = []
         for f,fName in enumerate(self.fileNames):
             if fName.startswith('/store/user'):
                 fName = '{0}/{1}'.format('/hdfs' if self.hasHDFS else 'root://cmsxrootd.hep.wisc.edu/',fName)
@@ -93,6 +94,7 @@ class AnalysisBase(object):
                     self.summedWeights += runtree.genEventSumw
                     for i in range(9):
                         self.summedWeightsLHEScale[i] += runtree.LHEScaleSumw[i]
+            #self.tfiles += [tfile]
             tfile.Close('R')
         logging.info('Analysis is running with version {0}'.format(self.version))
         logging.info("Will process {0} lumi sections with {1} events ({2}).".format(self.numLumis,self.numEvents,self.summedWeights))
@@ -172,7 +174,10 @@ class AnalysisBase(object):
         start = time.time()
         total = 0
         for f, fName in enumerate(self.fileNames):
-            if fName.startswith('/store'): fName = '{0}/{1}'.format('/hdfs' if self.hasHDFS else 'root://cmsxrootd.hep.wisc.edu/',fName)
+            if fName.startswith('/store/user'): 
+                fName = '{0}/{1}'.format('/hdfs' if self.hasHDFS else 'root://cmsxrootd.hep.wisc.edu/',fName)
+            elif fName.startswith('/store'):
+                fName = '{0}/{1}'.format('root://cmsxrootd.fnal.gov/',fName)
             logging.info('Processing file {0} of {1}: {2}'.format(f+1, len(self.fileNames), fName))
             tfile = ROOT.TFile.Open(fName,'READ')
             tree = tfile.Get(self.treename)

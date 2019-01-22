@@ -294,13 +294,11 @@ class MonoHZZAnalysis(AnalysisBase):
         # reject triggers if they are in another dataset
         # looks for the dataset name in the filename
         # for MC it accepts all
-        #reject = True if self.event.isData()>0.5 else False
-        # TODO figure out
-        reject = False
+        reject = True if self.event.isData()>0.5 else False
         for dataset in datasets:
             # if we match to the dataset, start accepting triggers
             # TODO: figure out how to find what dataset we are using
-            #if dataset in self.fileNames[0]: reject = False
+            if dataset in self.fileNames[0]: reject = False
             for trigger in triggerNames[dataset]:
                 var = 'HLT_{0}'.format(trigger)
                 passTrigger = getattr(self.event,var)()
@@ -309,8 +307,7 @@ class MonoHZZAnalysis(AnalysisBase):
                     # in data: reject if it corresponds to a higher dataset
                     return False if reject else True
             # dont check the rest of data
-            # TODO: figure out
-            #if dataset in self.fileNames[0]: break
+            if dataset in self.fileNames[0]: break
         return False
 
 
@@ -322,9 +319,9 @@ class MonoHZZAnalysis(AnalysisBase):
 def parse_command_line(argv):
     parser = argparse.ArgumentParser(description='Run analyzer')
 
-    #parser.add_argument('--inputFiles', type=str, nargs='*', default=getTestFiles('hzz'), help='Input files')
+    parser.add_argument('--inputFiles', type=str, nargs='*', default=getTestFiles('hzz'), help='Input files')
     #parser.add_argument('--inputFiles', type=str, nargs='*', default=getTestFiles('data'), help='Input files')
-    parser.add_argument('--inputFiles', type=str, nargs='*', default='doublemuon.root', help='Input files')
+    #parser.add_argument('--inputFiles', type=str, nargs='*', default='doublemuon.root', help='Input files')
     parser.add_argument('--inputFileList', type=str, default='', help='Input file list')
     parser.add_argument('--outputFile', type=str, default='monoHZZTree.root', help='Output file')
     parser.add_argument('--shift', type=str, default='', choices=['','ElectronEnUp','ElectronEnDown','MuonEnUp','MuonEnDown','TauEnUp','TauEnDown','JetEnUp','JetEnDown','JetResUp','JetResDown','UnclusteredEnUp','UnclusteredEnDown'], help='Energy shift')

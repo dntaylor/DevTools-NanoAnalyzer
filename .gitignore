@@ -102,3 +102,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+#Ipython Notebook
+.ipynb_checkpoints
+
+# vim
+*.swp
+
+# scram things
+*__init__.py
+.*
