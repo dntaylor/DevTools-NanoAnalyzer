@@ -93,7 +93,7 @@ class AnalysisBase(object):
                     self.numEvents += runtree.genEventCount
                     self.summedWeights += runtree.genEventSumw
                     for i in range(9):
-                        self.summedWeightsLHEScale[i] += runtree.LHEScaleSumw[i]
+                        if len(self.summedWeightsLHEScale)>i: self.summedWeightsLHEScale[i] += runtree.LHEScaleSumw[i]
             #self.tfiles += [tfile]
             tfile.Close('R')
         logging.info('Analysis is running with version {0}'.format(self.version))
