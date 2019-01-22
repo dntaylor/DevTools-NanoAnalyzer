@@ -129,6 +129,7 @@ class MonoHZZAnalysis(AnalysisBase):
             'met': self.pfmet,
         }
 
+
         # get leptons
         muons = self.getCands(self.muons,self.passMuon)
         electrons = self.getCands(self.electrons,self.passElectron)
@@ -237,14 +238,14 @@ class MonoHZZAnalysis(AnalysisBase):
     ###########################
     ### analysis selections ###
     ###########################
-    def fourLoose(self,cands):
+    def fourLoose(self):
         return len(self.electrons+self.muons)>=4
 
-    def vertex(self,cands):
+    def vertex(self):
         # !isFake && ndof > 4 && abs(z) <= 24 && position.Rho <= 2
         return self.event.PV_npvsGood()
 
-    def trigger(self,cands):
+    def trigger(self):
         # accept MC, check trigger for data
         if self.event.isData()<0.5: return True
         # 2018 commented
@@ -293,10 +294,13 @@ class MonoHZZAnalysis(AnalysisBase):
         # reject triggers if they are in another dataset
         # looks for the dataset name in the filename
         # for MC it accepts all
-        reject = True if self.event.isData()>0.5 else False
+        #reject = True if self.event.isData()>0.5 else False
+        # TODO figure out
+        reject = False
         for dataset in datasets:
             # if we match to the dataset, start accepting triggers
-            if dataset in self.fileNames[0]: reject = False
+            # TODO: figure out how to find what dataset we are using
+            #if dataset in self.fileNames[0]: reject = False
             for trigger in triggerNames[dataset]:
                 var = 'HLT_{0}'.format(trigger)
                 passTrigger = getattr(self.event,var)()
@@ -305,7 +309,8 @@ class MonoHZZAnalysis(AnalysisBase):
                     # in data: reject if it corresponds to a higher dataset
                     return False if reject else True
             # dont check the rest of data
-            if dataset in self.fileNames[0]: break
+            # TODO: figure out
+            #if dataset in self.fileNames[0]: break
         return False
 
 
@@ -319,7 +324,7 @@ def parse_command_line(argv):
 
     #parser.add_argument('--inputFiles', type=str, nargs='*', default=getTestFiles('hzz'), help='Input files')
     #parser.add_argument('--inputFiles', type=str, nargs='*', default=getTestFiles('data'), help='Input files')
-    parser.add_argument('--inputFiles', type=str, nargs='*', default='hzz.root', help='Input files')
+    parser.add_argument('--inputFiles', type=str, nargs='*', default='doublemuon.root', help='Input files')
     parser.add_argument('--inputFileList', type=str, default='', help='Input file list')
     parser.add_argument('--outputFile', type=str, default='monoHZZTree.root', help='Output file')
     parser.add_argument('--shift', type=str, default='', choices=['','ElectronEnUp','ElectronEnDown','MuonEnUp','MuonEnDown','TauEnUp','TauEnDown','JetEnUp','JetEnDown','JetResUp','JetResDown','UnclusteredEnUp','UnclusteredEnDown'], help='Energy shift')

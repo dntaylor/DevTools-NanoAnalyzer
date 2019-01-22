@@ -37,8 +37,8 @@ class CutTree(object):
     def getLabels(self):
         return self.labels
 
-    def evaluate(self,cands):
-        eventkey = '{0}:{1}:{2}'.format(cands['event'].run(), cands['event'].lumi(), cands['event'].event())
+    def evaluate(self,event):
+        eventkey = '{0}:{1}:{2}'.format(event.run(), event.lumi(), event.event())
         if eventkey in self.filled:
             logging.warning("Event {0} already filled.".format(eventkey))
             return False
@@ -47,14 +47,16 @@ class CutTree(object):
             # verify each cut
             for label in self.selections:
                 cut = self.selections[label]
-                self.results[label] = int(cut(cands))
+                self.results[label] = int(cut())
                 if not self.results[label]: passAll = False
-            # verify we have a candidate
-            if passAll:
-                for cname,cand in cands.iteritems():
-                    if cand==None:
-                        passAll = False
             return passAll
+
+    def checkCands(self,cands):
+        passAll = True
+        for cname,cand in cands.iteritems():
+            if cand==None:
+                passAll = False
+        return passAll
 
     def getResults(self):
         return self.results

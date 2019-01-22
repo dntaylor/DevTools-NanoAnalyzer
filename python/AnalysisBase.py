@@ -113,7 +113,7 @@ class AnalysisBase(object):
         self.tree.add(lambda cands: self.event.fixedGridRhoFastjetAll(), 'rho', 'F')
 
         # gen
-        self.tree.add(lambda cands: self.event.Pileup_nPU(), 'numTrueVertices', 'I')
+        self.tree.add(lambda cands: 0 if self.event.isData() else self.event.Pileup_nPU(), 'numTrueVertices', 'I')
         self.tree.add(lambda cands: self.event.isData(), 'isData', 'I')
         self.tree.add(lambda cands: 0 if self.event.isData() else self.event.genWeight(), 'genWeight', 'F')
         # scale shifts
@@ -185,7 +185,7 @@ class AnalysisBase(object):
                     remaining = float(elapsed)/total * float(self.totalEntries) - float(elapsed)
                     mins, secs = divmod(int(remaining),60)
                     hours, mins = divmod(mins,60)
-                    logging.info('{0}: Processing event {1}/{2} - {3}:{4:02d}:{5:02d} remaining'.format(self.outputTreeName,total,self.totalEntries,hours,mins,secs))
+                    logging.info('{}: Processing event {}/{} ({} selected) - {}:{:02d}:{:02d} remaining'.format(self.outputTreeName,total,self.totalEntries,self.eventsStored,hours,mins,secs))
                     self.flush()
                 self.setupEvent(tree)
                 self.perRowAction()
@@ -206,19 +206,19 @@ class AnalysisBase(object):
 
     def perRowAction(self):
         '''Per row action, can be overridden'''
+        goodToCheck = self.cutTree.evaluate(self.event)
+        if not goodToCheck: return
+
         # select candidates
         cands = self.selectCandidates()
         cands['event'] = self.event
 
         # store event?
-        goodToStore = self.cutTree.evaluate(cands)
-
-        # do we store the tree?
+        goodToStore = self.cutTree.checkCands(cands)
         if not goodToStore: return
 
         self.tree.fill(cands)
         self.eventsStored += 1
-        #self.outfile.Flush()
 
     def selectCandidates(self):
         '''
