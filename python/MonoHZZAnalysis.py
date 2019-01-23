@@ -43,8 +43,8 @@ class MonoHZZAnalysis(AnalysisBase):
         # trigger
 
         # 4 lepton
-        self.addComposite('4l')
-        self.addCompositeMet('4lmet')
+        self.addComposite('h')
+        self.addCompositeMet('hmet')
 
         # z1 leptons
         self.addDiLepton('z1')
@@ -120,8 +120,8 @@ class MonoHZZAnalysis(AnalysisBase):
             'z22' : None,
             'z1' : None,
             'z2' : None,
-            '4l' : None,
-            '4lmet' : None,
+            'h' : None,
+            'hmet' : None,
             'met': self.pfmet,
         }
 
@@ -214,8 +214,8 @@ class MonoHZZAnalysis(AnalysisBase):
         candidate['z22'] = z22
         candidate['z1'] = DiCandidate(z11,z12)
         candidate['z2'] = DiCandidate(z21,z22)
-        candidate['4l'] = CompositeCandidate(z11,z12,z21,z22)
-        candidate['4lmet'] = MetCompositeCandidate(self.pfmet,z11,z12,z21,z22)
+        candidate['h'] = CompositeCandidate(z11,z12,z21,z22)
+        candidate['hmet'] = MetCompositeCandidate(self.pfmet,z11,z12,z21,z22)
 
         return candidate
 
