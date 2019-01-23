@@ -130,15 +130,15 @@ class AnalysisBase(object):
             7: {'muR':0.5, 'muF':2.0},
             8: {'muR':0.5, 'muF':0.5},
         }
-        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[0] if len(self.event.LHEScaleWeight())>0 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[0]), 'F')
-        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[1] if len(self.event.LHEScaleWeight())>1 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[1]), 'F')
-        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[2] if len(self.event.LHEScaleWeight())>2 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[2]), 'F')
-        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[3] if len(self.event.LHEScaleWeight())>3 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[3]), 'F')
-        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[4] if len(self.event.LHEScaleWeight())>4 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[4]), 'F')
-        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[5] if len(self.event.LHEScaleWeight())>5 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[5]), 'F')
-        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[6] if len(self.event.LHEScaleWeight())>6 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[6]), 'F')
-        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[7] if len(self.event.LHEScaleWeight())>7 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[7]), 'F')
-        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[8] if len(self.event.LHEScaleWeight())>8 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[8]), 'F')
+        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[0] if hasattr(self.event,'LHEScaleWeight') and len(self.event.LHEScaleWeight())>0 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[0]), 'F')
+        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[1] if hasattr(self.event,'LHEScaleWeight') and len(self.event.LHEScaleWeight())>1 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[1]), 'F')
+        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[2] if hasattr(self.event,'LHEScaleWeight') and len(self.event.LHEScaleWeight())>2 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[2]), 'F')
+        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[3] if hasattr(self.event,'LHEScaleWeight') and len(self.event.LHEScaleWeight())>3 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[3]), 'F')
+        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[4] if hasattr(self.event,'LHEScaleWeight') and len(self.event.LHEScaleWeight())>4 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[4]), 'F')
+        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[5] if hasattr(self.event,'LHEScaleWeight') and len(self.event.LHEScaleWeight())>5 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[5]), 'F')
+        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[6] if hasattr(self.event,'LHEScaleWeight') and len(self.event.LHEScaleWeight())>6 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[6]), 'F')
+        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[7] if hasattr(self.event,'LHEScaleWeight') and len(self.event.LHEScaleWeight())>7 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[7]), 'F')
+        self.tree.add(lambda cands: 0. if self.event.isData() else self.event.LHEScaleWeight()[8] if hasattr(self.event,'LHEScaleWeight') and len(self.event.LHEScaleWeight())>8 else 0., 'genWeight_muR{muR:3.1f}_muF{muF:3.1f}'.format(**weightMap[8]), 'F')
 
     def __exit__(self, type, value, traceback):
         self.finish()
